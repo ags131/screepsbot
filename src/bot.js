@@ -45,7 +45,14 @@ controller.hears('welcomebot', 'message', async (bot, message) => {
 })
 
 controller.on('slash_command', async(bot, message) => {
-  let [shard,room] = message.text.split(' ') || []
-  if (shard.length === 1) shard = `shard${shard}`
-  await bot.replyPublic(message, `https://screeps.com/a/#/room/${shard}/${room}`)
+  if (message.command === '/room') {
+    let [shard,room] = message.text.split(' ') || []
+    if (shard.length === 1) shard = `shard${shard}`
+    const roomRegex = /^[EW]\d+[NS]\d+$/
+    if (roomRegex.test(room)) {
+      await bot.replyPublic(message, `https://screeps.com/a/#/room/${shard}/${room}`)
+    } else {
+      await bot.replyPrivate(message, `Invalid room`)
+    }
+  }
 })
